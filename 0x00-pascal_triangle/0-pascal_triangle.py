@@ -3,6 +3,7 @@
 
 
 def pascal_triangle(n):
+    """ Returns a list representing pascal's triangle """
     if n <= 0:
         return []
     pascal_tri = []
