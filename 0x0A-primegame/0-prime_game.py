@@ -1,35 +1,32 @@
 #!/usr/bin/python3
-"""Prime Game"""
-
-
-def is_prime(num):
-    """Helper function to check if a number is prime."""
-    if num <= 1:
-        return False
-    for idx in range(2, int(num**0.5) + 1):
-        if num % idx == 0:
-            return False
-    return True
+""" Prime Game """
 
 
 def isWinner(x, nums):
     """determine the winner of the game based on the number of rounds."""
+    if x < 1 or not nums:
+        return None
+
     maria_wins = 0
     ben_wins = 0
 
-    for _ in range(x):
-        if len(nums) % 2 == 0:
-            ben_wins += 1
-        else:
-            if is_prime(nums[0]):
-                maria_wins += 1
-            else:
-                ben_wins += 1
-        nums = nums[1:]
+    # generate prime nums
+    n = max(nums)
+    primes = [True for _ in range(1, n + 1, 1)]
+    primes[0] = False
 
-    if maria_wins > ben_wins:
-        return "Maria"
-    elif ben_wins > maria_wins:
-        return "Ben"
-    else:
+    for idx1, is_prime in enumerate(primes, 1):
+        if idx1 == 1 or not is_prime:
+            continue
+        for idx2 in range(idx1 + idx1, n + 1, idx1):
+            primes[idx2 - 1] = False
+
+    for _, n in zip(range(x), nums):
+        primes_count = len(list(filter(lambda X: X, primes[0: n])))
+        ben_wins += primes_count % 2 == 0
+        maria_wins += primes_count % 2 == 1
+
+    if maria_wins == ben_wins:
         return None
+
+    return "Maria" if maria_wins > ben_wins else "Ben"
